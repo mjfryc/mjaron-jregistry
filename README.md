@@ -25,7 +25,7 @@ In future there will be posibility to decide which variable should be persistent
 * [x] Make it thread-safe
 * [x] Create transactions with critical section.
 * Create persistent storage root
-* Create possibility to edit properties via web browser
+* [x] Create possibility to edit properties via web browser
     * options tree view
     * Create actions which may be triggered with html button
     * Create some options visualizers
