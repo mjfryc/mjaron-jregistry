@@ -1,6 +1,6 @@
-package pl.mjaron.jregistry2;
+package pl.mjaron.jregistry;
 
-import pl.mjaron.jregistry2.core.*;
+import pl.mjaron.jregistry.core.*;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -8,7 +8,7 @@ import java.util.TreeMap;
 /**
  * Stores all data in RAM only.
  */
-public class MemoryRoot extends PropertyNode implements IRoot {
+public class MemoryRoot extends Node implements IRoot {
 
     public MemoryRoot() {
         this.path = new PropertyPath("");
@@ -42,6 +42,14 @@ public class MemoryRoot extends PropertyNode implements IRoot {
     @Override
     public <U> void setValue(PropertyPath path, ISerializer<U> serializer, U what) {
         values.put(path.toString(), serializer.toStr(what));
+    }
+
+    @Override
+    public void accept(final IRegistryVisitor visitor) {
+        for (Map.Entry<String, String> entry : values.entrySet()) {
+            //System.out.println(entry.getKey() + ":" + entry.getValue());
+            visitor.visit(entry.getKey(), entry.getValue());
+        }
     }
 
     private Map<String, String> values = new TreeMap<>();

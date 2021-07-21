@@ -1,4 +1,4 @@
-package pl.mjaron.jregistry2.core;
+package pl.mjaron.jregistry.core;
 
 import java.util.Map;
 

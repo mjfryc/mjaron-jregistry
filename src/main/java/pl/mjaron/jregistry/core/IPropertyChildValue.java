@@ -1,4 +1,4 @@
-package pl.mjaron.jregistry2.core;
+package pl.mjaron.jregistry.core;
 
 public interface IPropertyChildValue {
     /**
@@ -31,4 +31,6 @@ public interface IPropertyChildValue {
      * @param path Route to the child property.
      */
     <U> void setValue(PropertyPath path, ISerializer<U> serializer, U what);
+
+    void accept(final IRegistryVisitor visitor);
 }

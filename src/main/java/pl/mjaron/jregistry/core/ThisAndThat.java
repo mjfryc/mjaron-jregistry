@@ -1,4 +1,4 @@
-package pl.mjaron.jregistry;
+package pl.mjaron.jregistry.core;
 
 import java.util.Arrays;
 
@@ -6,7 +6,7 @@ public class ThisAndThat {
 
     /**
      * @param what String where looking for char occurrences.
-     * @param ch Searched character.
+     * @param ch   Searched character.
      * @return Count of character ch in string what.
      */
     public static int charsCount(final String what, final char ch) {
@@ -20,15 +20,14 @@ public class ThisAndThat {
         return count;
     }
 
-    public static <T> T[] addToArray(final T array[], final T what)
-    {
+
+    public static <T> T[] addToArray(final T array[], final T what) {
         T newArray[] = Arrays.copyOf(array, array.length + 1);
         newArray[array.length] = what;
         return newArray;
     }
 
-    public static <T> T[] addToArray(final T array[], final T other[])
-    {
+    public static <T> T[] addToArray(final T array[], final T other[]) {
         T newArray[] = Arrays.copyOf(array, array.length + other.length);
         for (int i = 0; i < other.length; ++i) {
             newArray[array.length + i] = other[i];

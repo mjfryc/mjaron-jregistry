@@ -1,6 +1,6 @@
-package pl.mjaron.jregistry2.core;
+package pl.mjaron.jregistry.core;
 
-import pl.mjaron.jregistry.ThisAndThat;
+import pl.mjaron.jregistry.core.ThisAndThat;
 
 import java.util.Collection;
 
@@ -12,7 +12,7 @@ public class PropertyPath {
     public static final char NODE_SEPARATOR = '.';
 
     public PropertyPath plus(final String node) {
-        String newPath[] = pl.mjaron.jregistry.ThisAndThat.addToArray(this.pathParts, node);
+        String newPath[] = ThisAndThat.addToArray(this.pathParts, node);
         return new PropertyPath(newPath);
     }
 

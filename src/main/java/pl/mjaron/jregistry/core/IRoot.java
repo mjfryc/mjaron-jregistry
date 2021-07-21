@@ -1,4 +1,4 @@
-package pl.mjaron.jregistry2.core;
+package pl.mjaron.jregistry.core;
 
 /**
  * Conventional interface of root node which also stores child node values.

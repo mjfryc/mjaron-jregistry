@@ -1,4 +1,4 @@
-package pl.mjaron.jregistry;
+package pl.mjaron.jregistry.core;
 
 import org.junit.jupiter.api.Test;
 
