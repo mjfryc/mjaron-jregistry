@@ -12,8 +12,8 @@ public class Node extends PropertyNode {
         return this.add(name, new IntProperty());
     }
 
-    public StringProperty string(final String name) {
-        return this.add(name, new StringProperty());
+    public StrProperty string(final String name) {
+        return this.add(name, new StrProperty());
     }
 
 }

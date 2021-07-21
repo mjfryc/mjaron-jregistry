@@ -10,6 +10,8 @@ import java.util.TreeMap;
  */
 public class MemoryRoot extends Node implements IRoot {
 
+    private Map<String, String> values = new TreeMap<>();
+
     public MemoryRoot() {
         this.path = new PropertyPath("");
     }
@@ -51,7 +53,5 @@ public class MemoryRoot extends Node implements IRoot {
             visitor.visit(entry.getKey(), entry.getValue());
         }
     }
-
-    private Map<String, String> values = new TreeMap<>();
 
 }

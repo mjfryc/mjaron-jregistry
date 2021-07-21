@@ -3,8 +3,8 @@ package pl.mjaron.jregistry;
 import pl.mjaron.jregistry.core.GenericProperty;
 import pl.mjaron.jregistry.core.ISerializer;
 
-public class StringProperty extends GenericProperty<String, StringProperty> {
-    public StringProperty() {
+public class StrProperty extends GenericProperty<String, StrProperty> {
+    public StrProperty() {
         super(new ISerializer<String>() {
             @Override
             public String toStr(String what) {

@@ -5,6 +5,15 @@ import java.util.TreeMap;
 
 public class PropertyNode implements IPropertyNode {
 
+    private final Map<String, IPropertyNode> children = new TreeMap<>();
+    protected PropertyPath path = null;
+    protected IPropertyChildValue root = null;
+    /**
+     * Reference to the parent. Set by onCreate().
+     */
+    private IPropertyNode parent = null;
+    private String name = null;
+
     @Override
     public IPropertyNode getParent() {
         return parent;
@@ -49,14 +58,4 @@ public class PropertyNode implements IPropertyNode {
         this.path = parent.getPath().plus(name);
         this.root = parent.getRoot();
     }
-
-    private final Map<String, IPropertyNode> children = new TreeMap<>();
-    protected PropertyPath path = null;
-    protected IPropertyChildValue root = null;
-
-    /**
-     * Reference to the parent. Set by onCreate().
-     */
-    private IPropertyNode parent = null;
-    private String name = null;
 }

@@ -12,7 +12,7 @@ public interface IPropertyValue<T, S extends IPropertyValue> {
      * Removes value of this property. It is not longer stored in persistent storage.
      * Post condition: hasValue() returns false.
      */
-    void cleanValue();
+    S cleanValue();
 
     /**
      * Provides value related with this property.
@@ -26,5 +26,13 @@ public interface IPropertyValue<T, S extends IPropertyValue> {
      *
      * @param what Object which will be set as a property value.
      */
-    S setValue(T what);
+    S setValue(final T what);
+
+    /**
+     * This value will be returned if value is missing.
+     *
+     * @param what Alternative value if there is no value stored.
+     * @return Stored value or what if there is no stored value.
+     */
+    S setDefault(final T what);
 }

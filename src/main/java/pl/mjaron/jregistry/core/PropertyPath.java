@@ -1,7 +1,5 @@
 package pl.mjaron.jregistry.core;
 
-import pl.mjaron.jregistry.core.ThisAndThat;
-
 import java.util.Collection;
 
 /**
@@ -10,22 +8,7 @@ import java.util.Collection;
 public class PropertyPath {
 
     public static final char NODE_SEPARATOR = '.';
-
-    public PropertyPath plus(final String node) {
-        String newPath[] = ThisAndThat.addToArray(this.pathParts, node);
-        return new PropertyPath(newPath);
-    }
-
-    public PropertyPath plus(final PropertyPath other) {
-        String newPath[] = ThisAndThat.addToArray(this.pathParts, other.pathParts);
-        return new PropertyPath(newPath);
-    }
-
-    public class PathParseException extends RuntimeException {
-        public PathParseException(String what) {
-            super(what);
-        }
-    }
+    private final String[] pathParts;
 
     public PropertyPath(String[] path) {
         this.pathParts = path;
@@ -40,6 +23,16 @@ public class PropertyPath {
         this.pathParts = new String[collection.size()];
         collection.toArray(this.pathParts);
         this.validatePath(collection);
+    }
+
+    public PropertyPath plus(final String node) {
+        String newPath[] = ThisAndThat.addToArray(this.pathParts, node);
+        return new PropertyPath(newPath);
+    }
+
+    public PropertyPath plus(final PropertyPath other) {
+        String newPath[] = ThisAndThat.addToArray(this.pathParts, other.pathParts);
+        return new PropertyPath(newPath);
     }
 
     public String[] getPathParts() {
@@ -96,5 +89,9 @@ public class PropertyPath {
         }
     }
 
-    private final String[] pathParts;
+    public class PathParseException extends RuntimeException {
+        public PathParseException(String what) {
+            super(what);
+        }
+    }
 }

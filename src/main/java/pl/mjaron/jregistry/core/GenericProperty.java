@@ -7,6 +7,9 @@ package pl.mjaron.jregistry.core;
  */
 public class GenericProperty<T, S extends IPropertyValue> extends PropertyNode implements IPropertyValue<T, S> {
 
+    private final ISerializer<T> serializer;
+    private T defaultValue = null;
+
     public GenericProperty(final ISerializer<T> serializer) {
         this.serializer = serializer;
     }
@@ -22,15 +25,18 @@ public class GenericProperty<T, S extends IPropertyValue> extends PropertyNode i
     }
 
     @Override
-    public void cleanValue() {
+    public S cleanValue() {
         root.cleanValue(this.path);
+        return getSelf();
     }
 
     @Override
     public T getValue() {
+        if (!root.hasValue(this.path)) {
+            return this.defaultValue;
+        }
         return root.getValue(this.path, this.serializer);
     }
-
 
     @Override
     public S setValue(T what) {
@@ -39,10 +45,14 @@ public class GenericProperty<T, S extends IPropertyValue> extends PropertyNode i
     }
 
     @Override
+    public S setDefault(final T what) {
+        this.defaultValue = what;
+        return getSelf();
+    }
+
+    @Override
     public String toString() {
         return this.getPath().toString() + ":" + this.getValue();
     }
-
-    private final ISerializer<T> serializer;
 
 }
