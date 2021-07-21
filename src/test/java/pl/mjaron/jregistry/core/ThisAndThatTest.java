@@ -1,6 +1,7 @@
 package pl.mjaron.jregistry.core;
 
 import org.junit.jupiter.api.Test;
+import pl.mjaron.jregistry.core.ThisAndThat;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

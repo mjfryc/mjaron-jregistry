@@ -1,11 +1,12 @@
 package pl.mjaron.jregistry;
 
-import pl.mjaron.jregistry.core.TypedProperty;
+import pl.mjaron.jregistry.core.AnyProperty;
+import pl.mjaron.jregistry.core.IProperty;
 import pl.mjaron.jregistry.core.ISerializer;
 
-public class IntProperty extends TypedProperty<Integer, IntProperty> {
-    public IntProperty() {
-        super(new ISerializer<>() {
+public class IntProperty extends AnyProperty<Integer, IntProperty> {
+    public IntProperty(IProperty parent, String name) {
+        super(parent, name, new ISerializer<Integer>() {
             @Override
             public String toStr(Integer what) {
                 return what.toString();
