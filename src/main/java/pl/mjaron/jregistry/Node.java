@@ -89,7 +89,12 @@ public class Node implements IProperty {
     }
 
     @Override
-    public void accept(IPropertyVisitor visitor) {
-        IPropertyVisitor.accept(this, visitor);
+    public <T extends IPropertyVisitor> T accept(T visitor) {
+        return IPropertyVisitor.accept(this, visitor);
+    }
+
+    @Override
+    public IO getIO() {
+        return null; // This property doesn't use IO because it doesn't have a value.
     }
 }

@@ -1,0 +1,291 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registry</title>
+  <link rel="stylesheet" href="pure.css"
+    integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous">
+  <link rel="stylesheet" href="grids-responsive-min.css">
+
+</head>
+
+<style>
+  .mjaron-panel {
+    background: #1f8dd6;
+    border-radius: 3px;
+    color: #fff;
+  }
+
+  .mjaron-menu-button {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    margin: auto;
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+
+  .mjaron-blocks {
+    margin: auto;
+
+  }
+
+  body,
+  html {
+    margin: 0;
+    padding: 0;
+  }
+
+  .mjaron-all-window {
+    /* width: 100vw;
+    height: 100vh; */
+    border-radius: 10px;
+    top: 3%;
+    bottom: 3%;
+    left: 3%;
+    right: 3%;
+    margin: auto;
+    z-index: 999;
+    position: fixed;
+    /* width: 96%;
+    height: 96%; */
+    background: #436634;
+  }
+</style>
+
+<body>
+
+  <div class="pure-g">
+    <div class="pure-u-1-1">
+      <p style="text-align: center;">JRegistry</p>
+    </div>
+    <div class="pure-u-1-5 mjaron-panel">
+
+      <div class="pure-g">
+        <button class="pure-button mjaron-menu-button" onclick="updateTable()"><i class="fa fa-cog"></i>Refresh</button>
+      </div>
+      <div class="pure-g">
+        <button class="pure-button mjaron-menu-button"><i class="fa fa-cog"></i>Not used yet</button>
+      </div>
+    </div>
+    <div class="pure-u-4-5">
+      <table class="pure-table" style="width: 97%; margin: auto;" id="proptb">
+        <thead>
+          <tr>
+            <th># Path</th>
+            <th>Is node?</th>
+            <th>Value</th>
+            <th>Default value</th>
+            <th>Enumeration</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <!-- <td>1</td>
+            <td>Honda</td>
+            <td>Accord</td>
+            <td>2009</td> -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+  <script>
+    var allOptions = {};
+
+    function updateProperty(path, value) {
+      var toUpdate = {};
+      toUpdate["path"] = path;
+      toUpdate["value"] = value;
+      httpPost("/u?path=" + path + "&value=" + value, JSON.stringify(toUpdate));
+    }
+
+    var popupHide = function () {
+      try {
+        document.getElementById("popup").remove();
+        popupShown = false;
+      } catch (e) { console.log(e); };
+    };
+
+    document.addEventListener('keydown', function (e) {
+      if (e.keyCode == 27) {
+        popupHide();
+      }
+    });
+
+    var popupShown = false;
+    var editOption = function (path) {
+      if (popupShown) {
+        return;
+      }
+      popupShown = true;
+      console.log("About to edit option: " + path);
+      var entry = allOptions[path];
+      if (entry === undefined) {
+        console.error("Bad option path!");
+        popupShown = false;
+        return;
+      }//document.body.innerHTML
+      var editForm =
+        '<div id="popup" class="mjaron-all-window">' +
+        '<div class="pure-u-1-2">' +
+        `<form class="pure-form pure-form-aligned" style="margin:auto;display:flex;">
+            <fieldset>
+                <div class="pure-control-group">
+                    <label for="e-name">Name</label>
+                    <input type="text" id="e-name" placeholder="Name" value="${entry.name}" readonly=""/>
+                </div>
+                <div class="pure-control-group">
+                    <label for="e-path">Path</label>
+                    <input type="text" id="e-path" placeholder="Path" value="${entry.path}" readonly=""/>
+                </div>
+                <div class="pure-control-group">
+                    <label for="is-node">Is node</label>
+                    <input type="text" id="is-node" placeholder="isNode" value="${entry.isNode}" readonly=""/>
+                </div>
+                <div class="pure-control-group">
+                    <label for="e-value">Value</label>
+                    <input type="text" id="e-value" value="${entry.value}" placeholder="Value"/>
+                </div>
+                <div class="pure-control-group">
+                  <label for="v-enums">Enum values</label>
+                  <select id="v-enums" class="pure-input-1-2">`;
+      for (var enumEntryIdx in entry.enums) {
+        var enumEntry = entry.enums[enumEntryIdx];
+        editForm += `<option>${enumEntry}</option>`;
+      }
+      editForm += `</select>
+                </div>
+                <div class="pure-controls">
+
+            <button id="updateBtn" class="pure-button pure-button-primary">Submit</button>
+            <button onclick="popupHide();" class="pure-button button-warning">Cancel</button>
+        </div>
+            </fieldset>
+        </form>`
+        + '</div>'
+
+        + '<div class="pure-u-1-2">'
+        + '<form class="pure-form pure-form-aligned" style="margin:auto;display:flex;height:100%;justify-content: center; ">'
+        + '<fieldset style="height:100%;">'
+        + '<div class="pure-control-group" style="height:100%;">'
+        + '<textarea style="height:100%;" readonly="">Desc..</textarea>'
+        + '</div>'
+        + '</fieldset>'
+        + '</form>'
+        + '</div>'
+
+        + '</div>';
+
+      document.body.innerHTML += editForm;
+
+      document.getElementById("v-enums").addEventListener('click', function () {
+        var newValue = document.getElementById("v-enums").value;
+        if (newValue != null && newValue != "") {
+          document.getElementById("e-value").value = newValue;
+        }
+      });
+
+      document.getElementById("updateBtn").addEventListener('click', function () {
+        var newValue = document.getElementById("e-value").value;
+        if (newValue != null && newValue != "") {
+          updateProperty(entry.path, newValue);
+          popupHide();
+        }
+      });
+
+    }
+
+    var jp = [{ "path": "", "name": "root", "isNode": true }, { "path": "fish", "name": "fish", "isNode": true }, { "path": "fish.age", "enums": [], "default": null, "name": "age", "isNode": false, "hasValue": true, "value": "28", "enumOnly": false }, { "path": "fish.what", "enums": [], "default": "Fish", "name": "what", "isNode": false, "hasValue": false, "value": null, "enumOnly": false }, { "path": "fish.name", "enums": [], "default": null, "name": "name", "isNode": false, "hasValue": true, "value": "Jessica", "enumOnly": false }, { "path": "fish.enum", "enums": ["a", "b", "c"], "default": null, "name": "enum", "isNode": false, "hasValue": true, "value": "b", "enumOnly": true }, { "path": "fish.enum-d", "enums": ["4", "6", "8"], "default": null, "name": "enum-d", "isNode": false, "hasValue": true, "value": "4", "enumOnly": true }, { "path": "fish.should-i-swim?", "enums": [], "default": "true", "name": "should-i-swim?", "isNode": false, "hasValue": false, "value": null, "enumOnly": false }];
+
+    var insertIntoTable = function (input) {
+      if (typeof input === 'string' || input instanceof String) {
+        var input = JSON.parse(input);
+      }
+
+
+      var table = document.getElementById("proptb");
+      console.log("Parsing input...");
+      var tableRowIdx = 0;
+      for (var idx in input) {
+        var entry = input[idx];
+        if (entry.path == "") {
+          continue;
+        }
+        var row = table.insertRow();
+        row.id = entry.path;
+        if (tableRowIdx % 2 == 0) {
+          row.className = "pure-table-odd";
+        }
+        ++tableRowIdx;
+        var c0 = row.insertCell(0);
+        c0.innerHTML = entry.path;
+        row.insertCell(1).innerHTML = entry.isNode
+        var c2 = row.insertCell(2);
+        if (entry.hasValue == true) {
+          c2.innerHTML = entry.value;
+        }
+        var c3 = row.insertCell(3);
+        if (entry.default !== undefined) {
+          c3.innerHTML = entry.default;
+        }
+        var c4 = row.insertCell(4);
+        if (entry.enumOnly == true) { c4.innerHTML = "Only enums: " }
+        if (entry.enums !== undefined && entry.enums.length != 0) {
+          c4.innerHTML += entry.enums;
+        }
+        var c5 = row.insertCell(5);
+        allOptions[entry.path] = entry;
+        c5.innerHTML = '<button id="btn_' + entry.path + '" class="pure-button" onclick=\'editOption(\"' + entry.path + '\");\'><i class="fa fa-cog"></i>Settings</button>';
+
+        document.getElementById("btn_" + entry.path).addEventListener("click", function () {
+          editOption(entry);
+        });
+
+      }
+
+    };
+
+    function httpPost(theUrl, additionalData) {
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open("POST", theUrl, true); // false for synchronous request
+      xmlHttp.send(additionalData);
+      return xmlHttp.responseText;
+    }
+
+    function httpGet(theUrl) {
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open("GET", theUrl, false); // false for synchronous request
+      xmlHttp.send(null);
+      return xmlHttp.responseText;
+    }
+
+    var clearTable = function () {
+      var table = document.getElementById("proptb");
+      for (var i = 1; i < table.rows.length;) {
+        table.deleteRow(i);
+      }
+    }
+
+
+    var updateTable = function () {
+      clearTable();
+      //var content = jp; //httpGet("/r");
+      var content = httpGet("/r");
+      console.log("data received: " + content);
+      insertIntoTable(content);
+    }
+
+//alert('hello!');
+  </script>
+
+</body>
+
+</html>

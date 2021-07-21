@@ -2,6 +2,7 @@ package pl.mjaron.jregistry;
 
 import pl.mjaron.jregistry.core.IPropertyVisitor;
 import pl.mjaron.jregistry.core.MemoryStorage;
+import pl.mjaron.jregistry.httpService.PropertyServer;
 import pl.mjaron.jregistry.core.ReentrantSection;
 
 import java.io.PrintStream;
@@ -41,24 +42,29 @@ public class Sample {
             return null;
         });
 
-        Thread thr = new Thread(() -> {
-            String someOperationResult = R.FISH_AGE.getCriticalSection().withLock(() -> {
-                // All operations inside lock will be called atomically.
-                Thread.sleep(10000);
-                return R.FISH_AGE.getName();
+        // Skipping time consuming snippets.
+        if (false) {
+            Thread thr = new Thread(() -> {
+                String someOperationResult = R.FISH_AGE.getCriticalSection().withLock(() -> {
+                    // All operations inside lock will be called atomically.
+                    Thread.sleep(10000);
+                    return R.FISH_AGE.getName();
+                });
+                System.out.println("someOperationResult: " + someOperationResult);
             });
-            System.out.println("someOperationResult: " + someOperationResult);
-        });
-        thr.start();;
+            thr.start();
+            ;
 
-        Thread.sleep(100);
-        R.FISH_AGE.getValue();
+            Thread.sleep(100);
+            R.FISH_AGE.getValue();
+        }
 
         o.println();
         o.println("Fish age is: " + R.FISH_AGE.getValue());
 
         o.println();
         o.println("Should I swim? " + R.myBool.getValue());
-    }
 
+        PropertyServer srv = new PropertyServer(R.root, 8080).start();
+    }
 }

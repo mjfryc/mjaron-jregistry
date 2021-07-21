@@ -21,8 +21,9 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
 
     /**
      * Common property implementation.
-     * @param parent Parent property or node.
-     * @param name Name of single node.
+     *
+     * @param parent     Parent property or node.
+     * @param name       Name of single node.
      * @param serializer Converter from / to string.
      */
     public AnyProperty(IProperty parent, String name, ISerializer<T> serializer) {
@@ -74,8 +75,13 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
     }
 
     @Override
-    public void accept(IPropertyVisitor visitor) {
-        IPropertyVisitor.accept(this, visitor);
+    public <T extends IPropertyVisitor> T accept(T visitor) {
+        return IPropertyVisitor.accept(this, visitor);
+    }
+
+    @Override
+    public IO getIO() {
+        return io;
     }
 
     @Override
@@ -147,6 +153,7 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
 
     /**
      * Adds sample valid value to sample values set (enumeration).
+     *
      * @param what One enum value.
      * @return This object.
      */

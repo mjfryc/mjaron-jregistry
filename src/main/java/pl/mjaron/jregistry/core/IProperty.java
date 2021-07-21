@@ -65,5 +65,28 @@ public interface IProperty {
      * Iterates over all children recursively.
      * @param visitor IPropertyVisitor::visit() will be called for each child recursively.
      */
-    void accept(IPropertyVisitor visitor);
+    <T extends IPropertyVisitor> T accept(T visitor);
+
+    /**
+     * Used only for serialization purposes.
+     * @return
+     */
+    IO getIO();
+
+    static IProperty findChild(final IProperty p, final String name) {
+        for (final IProperty childEntry : p.getChildren()) {
+            if (childEntry.getName().equals(name)) {
+                return childEntry;
+            }
+        }
+        return null;
+    }
+
+    static IProperty getChildByPath(final IProperty p, final PropertyPath path) {
+        IProperty pNode = p;
+        for (final String node : path.getPathParts()) {
+            pNode = findChild(pNode, node);
+        }
+        return pNode;
+    }
 }

@@ -24,7 +24,7 @@ public class IO {
      *
      * @return True if given property is stored in persistent storage.
      */
-    boolean hasValue() {
+    public boolean hasValue() {
         return cs.withLock(() -> s.hasValue(p.getPath()));
     }
 
@@ -32,7 +32,7 @@ public class IO {
      * Removes value of this property. It is not longer stored in persistent storage.
      * Post condition: hasValue() returns false.
      */
-    void cleanTextValue() {
+    public void cleanTextValue() {
         cs.withLock(() -> {
             s.cleanValue(p.getPath());
             return null;
@@ -45,7 +45,7 @@ public class IO {
      *
      * @return Text value of property.
      */
-    String getTextValue() {
+    public String getTextValue() {
         return cs.withLock(() -> s.getValue(p.getPath()));
     }
 
@@ -55,7 +55,7 @@ public class IO {
      *
      * @param textValue Value stored as text.
      */
-    void setTextValue(final String textValue) {
+    public void setTextValue(final String textValue) {
         if (this.enumOnly && !this.enums.contains(textValue)) {
             throw new RuntimeException("Bad enum value: [" + textValue + "], available values: " + this.enums);
         }
@@ -68,21 +68,21 @@ public class IO {
     /**
      * @return Default value in text format.
      */
-    String getDefaultText() {
+    public String getDefaultText() {
         return defaultValueText;
     }
 
     /**
      * @param what Sets default text value if property is missing.
      */
-    void setDefaultText(final String what) {
+    public void setDefaultText(final String what) {
         defaultValueText = what;
     }
 
     /**
      * @return True if enums are accepted only.
      */
-    boolean isEnumOnly() {
+    public boolean isEnumOnly() {
         return enumOnly;
     }
 
@@ -91,7 +91,7 @@ public class IO {
      *                 If false, other values will be also tolerated.
      * @return This object.
      */
-    void setEnumOnly(final boolean enumOnly) {
+    public void setEnumOnly(final boolean enumOnly) {
         this.enumOnly = enumOnly;
     }
 

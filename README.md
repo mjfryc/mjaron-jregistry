@@ -5,7 +5,13 @@
 
 # mjaron-jregistry
 
-Key-value settings for java applications.
+Key-value settings for java (and Android) applications.
+
+The idea is to preview and sometimes modify variables in Java application via web browser.
+In future there will be posibility to decide which variable should be persistent and which runtime only.
+
+![mjaron-jregistry-screen-0](mjaron-jregistry-screen-0.png)
+
 
 ## Tasks
 
