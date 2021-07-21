@@ -9,7 +9,11 @@ Key-value settings for java applications.
 
 ## Tasks
 
-* [x] String and Integer properties
+* [x] Property types:
+   * [x] Nodes
+   * [x] Strings
+   * [x] Integers
+   * [x] Booleans
 * [x] Possibility to define default values if properties are not set in storage
 * [x] Create type value restrictions (enumerations) 
 * [x] Make it thread-safe
