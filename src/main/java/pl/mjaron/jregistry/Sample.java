@@ -22,6 +22,8 @@ class Registry {
             .setEnumOnly(true) // If setting value other than added enum - a RuntimeException will be thrown.
             .setValue("b");
     public IntProperty myDigitEnum = new IntProperty(fish, "enum-d").setEnumOnly(true).addEnum(4).addEnum(6).addEnum(8);
+
+    public BoolProperty myBool = new BoolProperty(fish, "should-i-swim?").setDefault(true);
 }
 
 public class Sample {
@@ -41,6 +43,7 @@ public class Sample {
 
         Thread thr = new Thread(() -> {
             String someOperationResult = R.FISH_AGE.getCriticalSection().withLock(() -> {
+                // All operations inside lock will be called atomically.
                 Thread.sleep(10000);
                 return R.FISH_AGE.getName();
             });
@@ -53,6 +56,9 @@ public class Sample {
 
         o.println();
         o.println("Fish age is: " + R.FISH_AGE.getValue());
+
+        o.println();
+        o.println("Should I swim? " + R.myBool.getValue());
     }
 
 }
