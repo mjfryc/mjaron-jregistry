@@ -2,7 +2,10 @@ package pl.mjaron.jregistry.core;
 
 import java.util.Map;
 
-public interface IPropertyNode {
+/**
+ * Basic node which may return child nodes if property is a node or give text value is property is a leaf.
+ */
+public interface IPropertyNode extends IPropertyTextValue {
     /**
      * Properties are stored in tree hierarchy.
      * Each property is a node.
@@ -28,7 +31,7 @@ public interface IPropertyNode {
      * @param <ChildT> Type of child property.
      * @return Child which has been added.
      */
-    <ChildT extends IPropertyNode> ChildT add(String name, ChildT child);
+    <ChildT extends IPropertyNode> ChildT add(final String name, final ChildT child);
 
     /**
      * Properties are stored in tree hierarchy. Each property is a node.
@@ -44,9 +47,9 @@ public interface IPropertyNode {
     PropertyPath getPath();
 
     /**
-     * @return Reference tp root node.
+     * @return Reference to root node.
      */
-    IPropertyChildValue getRoot();
+    IStorage getRoot();
 
     /**
      * Information about nesting level of this property.
@@ -56,11 +59,17 @@ public interface IPropertyNode {
     int getLevel();
 
     /**
+     * Determines whether this node is leaf or node.
+     * @return True if it is a node. False if it is a leaf.
+     */
+    boolean isNode();
+
+    /**
      * Must be called by parent property when adding child.
      * Should set parent reference.
      *
      * @param name   Node name of this property.
      * @param parent This property owner reference.
      */
-    void onCreate(String name, IPropertyNode parent);
+    void onCreate(final String name, final IPropertyNode parent);
 }

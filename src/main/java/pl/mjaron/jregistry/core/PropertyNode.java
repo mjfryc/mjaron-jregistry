@@ -3,16 +3,21 @@ package pl.mjaron.jregistry.core;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class PropertyNode implements IPropertyNode {
+public abstract class PropertyNode<S extends PropertyNode> implements IPropertyNode, IPropertyTextValue {
 
     private final Map<String, IPropertyNode> children = new TreeMap<>();
     protected PropertyPath path = null;
-    protected IPropertyChildValue root = null;
+    protected IStorage root = null;
     /**
      * Reference to the parent. Set by onCreate().
      */
     private IPropertyNode parent = null;
     private String name = null;
+
+    @SuppressWarnings("unchecked")
+    private S getSelf() {
+        return (S) this;
+    }
 
     @Override
     public IPropertyNode getParent() {
@@ -25,7 +30,7 @@ public class PropertyNode implements IPropertyNode {
     }
 
     @Override
-    public <ChildT extends IPropertyNode> ChildT add(String name, ChildT child) {
+    public <ChildT extends IPropertyNode> ChildT add(final String name, final ChildT child) {
         this.children.put(name, child);
         child.onCreate(name, this);
         return child;
@@ -42,7 +47,7 @@ public class PropertyNode implements IPropertyNode {
     }
 
     @Override
-    public IPropertyChildValue getRoot() {
+    public IStorage getRoot() {
         return this.root;
     }
 
@@ -57,5 +62,25 @@ public class PropertyNode implements IPropertyNode {
         this.parent = parent;
         this.path = parent.getPath().plus(name);
         this.root = parent.getRoot();
+    }
+
+    @Override
+    public boolean hasValue() {
+        return root.hasValue(this.path);
+    }
+
+    @Override
+    public void cleanTextValue() {
+        root.cleanValue(this.path);
+    }
+
+    @Override
+    public String getTextValue() {
+        return root.getValue(this.path);
+    }
+
+    @Override
+    public void setTextValue(String textValue) {
+        root.setValue(this.path, textValue);
     }
 }

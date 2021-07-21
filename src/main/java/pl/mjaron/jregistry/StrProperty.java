@@ -1,9 +1,9 @@
 package pl.mjaron.jregistry;
 
-import pl.mjaron.jregistry.core.GenericProperty;
+import pl.mjaron.jregistry.core.TypedProperty;
 import pl.mjaron.jregistry.core.ISerializer;
 
-public class StrProperty extends GenericProperty<String, StrProperty> {
+public class StrProperty extends TypedProperty<String, StrProperty> {
     public StrProperty() {
         super(new ISerializer<String>() {
             @Override

@@ -1,18 +1,6 @@
 package pl.mjaron.jregistry.core;
 
-public interface IPropertyValue<T, S extends IPropertyValue> {
-    /**
-     * Tells whether given property has any value set in persistent storage.
-     *
-     * @return True if given property is stored in persistent storage.
-     */
-    boolean hasValue();
-
-    /**
-     * Removes value of this property. It is not longer stored in persistent storage.
-     * Post condition: hasValue() returns false.
-     */
-    S cleanValue();
+public interface IPropertyTypedValue<T, S extends IPropertyTypedValue> extends IPropertyTextValue {
 
     /**
      * Provides value related with this property.

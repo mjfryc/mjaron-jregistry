@@ -2,7 +2,7 @@ package pl.mjaron.jregistry;
 
 import pl.mjaron.jregistry.core.PropertyNode;
 
-public class Node extends PropertyNode {
+public class Node extends PropertyNode<Node> {
 
     public Node node(final String name) {
         return this.add(name, new Node());
@@ -16,4 +16,8 @@ public class Node extends PropertyNode {
         return this.add(name, new StrProperty());
     }
 
+    @Override
+    public boolean isNode() {
+        return true;
+    }
 }

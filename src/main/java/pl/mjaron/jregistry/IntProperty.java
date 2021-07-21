@@ -1,9 +1,9 @@
 package pl.mjaron.jregistry;
 
-import pl.mjaron.jregistry.core.GenericProperty;
+import pl.mjaron.jregistry.core.TypedProperty;
 import pl.mjaron.jregistry.core.ISerializer;
 
-public class IntProperty extends GenericProperty<Integer, IntProperty> {
+public class IntProperty extends TypedProperty<Integer, IntProperty> {
     public IntProperty() {
         super(new ISerializer<>() {
             @Override
