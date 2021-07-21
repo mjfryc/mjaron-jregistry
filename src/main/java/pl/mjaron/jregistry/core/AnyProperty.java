@@ -9,6 +9,7 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
     private IProperty parent;
     private String name;
     private ISerializer<T> serializer;
+    private IProperty root;
     private PropertyPath path;
     private IO io;
     private ArrayList<IProperty> children = null;
@@ -28,8 +29,9 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
         this.parent = parent;
         this.name = name;
         this.serializer = serializer;
+        this.root = parent.getRoot();
         this.path = parent.getPath().plus(name);
-        this.io = new IO(getStorage(), this);
+        this.io = new IO(this.getStorage(), this, this.getCriticalSection());
         parent.onChildCreated(this);
     }
 
@@ -39,8 +41,18 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
     }
 
     @Override
+    public IProperty getRoot() {
+        return root;
+    }
+
+    @Override
     public IStorage getStorage() {
-        return parent.getStorage();
+        return root.getStorage();
+    }
+
+    @Override
+    public ICriticalSection getCriticalSection() {
+        return root.getCriticalSection();
     }
 
     @Override

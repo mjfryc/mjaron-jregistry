@@ -1,9 +1,6 @@
 package pl.mjaron.jregistry;
 
-import pl.mjaron.jregistry.core.IPropertyVisitor;
-import pl.mjaron.jregistry.core.IStorage;
-import pl.mjaron.jregistry.core.PropertyPath;
-import pl.mjaron.jregistry.core.IProperty;
+import pl.mjaron.jregistry.core.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,23 +10,29 @@ public class Node implements IProperty {
 
     private IProperty parent;
     private String name;
+    private IProperty root;
     private PropertyPath path;
     private IStorage storage;
+    private ICriticalSection section;
     private ArrayList<IProperty> children = null;
 
     public Node(IProperty parent, String name) {
         this.parent = parent;
         this.name = name;
+        this.root = parent.getRoot();
         this.path = parent.getPath().plus(name);
-        this.storage = parent.getStorage();
+        this.storage = root.getStorage();
+        this.section = root.getCriticalSection();
         parent.onChildCreated(this);
     }
 
-    public Node(IStorage storage) {
+    public Node(IStorage storage, ICriticalSection section) {
         this.parent = null;
         this.name = "root";
         this.path = new PropertyPath("");
         this.storage = storage;
+        this.section = section;
+        this.root = this;
     }
 
     @Override
@@ -48,8 +51,18 @@ public class Node implements IProperty {
     }
 
     @Override
+    public IProperty getRoot() {
+        return root;
+    }
+
+    @Override
     public IStorage getStorage() {
         return storage;
+    }
+
+    @Override
+    public ICriticalSection getCriticalSection() {
+        return section;
     }
 
     @Override

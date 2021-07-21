@@ -7,14 +7,16 @@ public class IO {
 
     private final IStorage s;
     private final IProperty p;
+    ICriticalSection cs;
 
     private String defaultValueText = null;
     private boolean enumOnly = false;
     private List<String> enums = null;
 
-    public IO(final IStorage storage, IProperty property) {
+    public IO(final IStorage storage, IProperty property, ICriticalSection section) {
         this.s = storage;
         this.p = property;
+        this.cs = section;
     }
 
     /**
@@ -23,7 +25,7 @@ public class IO {
      * @return True if given property is stored in persistent storage.
      */
     boolean hasValue() {
-        return s.hasValue(p.getPath());
+        return cs.withLock(() -> s.hasValue(p.getPath()));
     }
 
     /**
@@ -31,7 +33,10 @@ public class IO {
      * Post condition: hasValue() returns false.
      */
     void cleanTextValue() {
-        s.cleanValue(p.getPath());
+        cs.withLock(() -> {
+            s.cleanValue(p.getPath());
+            return null;
+        });
     }
 
     /**
@@ -41,7 +46,7 @@ public class IO {
      * @return Text value of property.
      */
     String getTextValue() {
-        return s.getValue(p.getPath());
+        return cs.withLock(() -> s.getValue(p.getPath()));
     }
 
     /**
@@ -54,7 +59,10 @@ public class IO {
         if (this.enumOnly && !this.enums.contains(textValue)) {
             throw new RuntimeException("Bad enum value: [" + textValue + "], available values: " + this.enums);
         }
-        s.setValue(p.getPath(), textValue);
+        cs.withLock(() -> {
+            s.setValue(p.getPath(), textValue);
+            return null;
+        });
     }
 
     /**

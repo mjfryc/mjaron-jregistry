@@ -29,7 +29,20 @@ public interface IProperty {
      */
     IProperty getParent();
 
+    /**
+     * @return Root node.
+     */
+    IProperty getRoot();
+
+    /**
+     * @return Storage which is responsible for saving / loading all data.
+     */
     IStorage getStorage();
+
+    /**
+     * @return Implementation of lock used while saving / loading all data.
+     */
+    ICriticalSection getCriticalSection();
 
     /**
      * Determines whether this node is leaf or node.
