@@ -30,8 +30,6 @@ public class Sample {
                         static PropertyNode right = node.add("right", new StringProperty()).setValue("BAD");
                     }
                 }
-
-                static StringProperty leftFrontLeg = node.add("leftFrontLeg", new StringProperty()).setValue("OK");
             }
         }
     }
@@ -56,7 +54,7 @@ public class Sample {
     public static void main(String[] args) {
         System.out.println("Registry1");
         System.out.println(Registry1.cats.count);
-        System.out.println(Registry1.cats.bodyPartsStatus.leftFrontLeg);
+        System.out.println(Registry1.cats.bodyPartsStatus.leg.front.right);
         System.out.println("Only referenced static values are stored.");
         Registry1.root.accept((key, value) -> System.out.println(key + ":" + value));
 
