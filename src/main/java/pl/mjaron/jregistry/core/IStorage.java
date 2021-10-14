@@ -9,7 +9,7 @@ public interface IStorage {
     boolean hasValue(final PropertyPath path);
 
     /**
-     * Removes value of child property. It is not longer stored in persistent storage.
+     * Removes value of child property. It is no longer stored in persistent storage.
      * Post condition: hasValue(path) returns false.
      *
      * @param path Route to the child property.

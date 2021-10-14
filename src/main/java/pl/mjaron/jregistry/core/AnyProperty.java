@@ -6,12 +6,12 @@ import java.util.Objects;
 
 public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
 
-    private IProperty parent;
-    private String name;
-    private ISerializer<T> serializer;
-    private IProperty root;
-    private PropertyPath path;
-    private IO io;
+    private final IProperty parent;
+    private final String name;
+    private final ISerializer<T> serializer;
+    private final IProperty root;
+    private final PropertyPath path;
+    private final IO io;
     private ArrayList<IProperty> children = null;
 
     @SuppressWarnings("unchecked")
@@ -75,7 +75,7 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
     }
 
     @Override
-    public <T extends IPropertyVisitor> T accept(T visitor) {
+    public <V extends IPropertyVisitor> V accept(V visitor) {
         return IPropertyVisitor.accept(this, visitor);
     }
 
@@ -114,7 +114,7 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
     }
 
     /**
-     * Allows to change property's value if it is possible.
+     * Allows changing property's value if it is possible.
      *
      * @param what Object which will be set as a property value.
      */
@@ -137,6 +137,7 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
     /**
      * @return True if enums are accepted only.
      */
+    @SuppressWarnings("unused")
     public boolean isEnumOnly() {
         return io.isEnumOnly();
     }
@@ -165,6 +166,7 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
     /**
      * @return List of all added enums.
      */
+    @SuppressWarnings("unused")
     public List<T> getEnums() {
         final List<T> result = new ArrayList<>(io.getEnumTexts().size());
         for (final String entry : io.getEnumTexts()) {

@@ -8,12 +8,12 @@ import java.util.Objects;
 
 public class Node implements IProperty {
 
-    private IProperty parent;
-    private String name;
-    private IProperty root;
-    private PropertyPath path;
-    private IStorage storage;
-    private ICriticalSection section;
+    private final IProperty parent;
+    private final String name;
+    private final IProperty root;
+    private final PropertyPath path;
+    private final IStorage storage;
+    private final ICriticalSection section;
     private ArrayList<IProperty> children = null;
 
     public Node(IProperty parent, String name) {

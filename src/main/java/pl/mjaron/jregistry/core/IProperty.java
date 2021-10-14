@@ -69,7 +69,7 @@ public interface IProperty {
 
     /**
      * Used only for serialization purposes.
-     * @return
+     * @return IO instance.
      */
     IO getIO();
 
