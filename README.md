@@ -37,7 +37,7 @@ In future there will be posibility to decide which variable should be persistent
 package pl.mjaron.jregistry;
 
 import pl.mjaron.jregistry.core.IPropertyVisitor;
-import pl.mjaron.jregistry.core.MemoryStorage;
+import pl.mjaron.jregistry.core.MemoryLegibleStorage;
 import pl.mjaron.jregistry.core.ReentrantSection;
 
 import java.io.PrintStream;

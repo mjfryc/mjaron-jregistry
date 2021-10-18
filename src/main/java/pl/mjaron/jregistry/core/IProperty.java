@@ -7,6 +7,12 @@ import java.util.List;
  */
 public interface IProperty {
 
+    public enum Type {
+        NODE,
+        LEGIBLE,
+        BLOB
+    }
+
     /**
      * Properties are stored in tree hierarchy. Each property is a node.
      * This method provides this property node name.
@@ -37,7 +43,7 @@ public interface IProperty {
     /**
      * @return Storage which is responsible for saving / loading all data.
      */
-    IStorage getStorage();
+    ILegibleStorage getStorage();
 
     /**
      * @return Implementation of lock used while saving / loading all data.
@@ -46,12 +52,14 @@ public interface IProperty {
 
     /**
      * Determines whether this node is leaf or node.
+     *
      * @return True if it is a node. False if it is a leaf.
      */
-    boolean isNode();
+    Type getType();
 
     /**
      * Should be called automatically by property / node constructor.
+     *
      * @param child Instance of child.
      */
     void onChildCreated(IProperty child);
@@ -63,15 +71,33 @@ public interface IProperty {
 
     /**
      * Iterates over all children recursively.
+     *
      * @param visitor IPropertyVisitor::visit() will be called for each child recursively.
      */
     <T extends IPropertyVisitor> T accept(T visitor);
 
     /**
+     * Runtime version identifier. Changed identifier means changed value.
+     *
+     * @return Version identifier unique for single runtime.
+     */
+    long getVersion();
+
+    /**
+     * Increases unique version of value and its parent version.
+     *
+     * @return New increased version of value.
+     */
+    long increaseVersion();
+
+    /**
      * Used only for serialization purposes.
+     *
      * @return IO instance.
      */
-    IO getIO();
+    LegibleIO getLegibleIO();
+
+    BlobIO getBlobIO();
 
     static IProperty findChild(final IProperty p, final String name) {
         for (final IProperty childEntry : p.getChildren()) {

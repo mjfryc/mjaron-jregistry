@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
+public class TypedLegibleProperty<T, S extends TypedLegibleProperty<T, S>> extends PropertyBase {
 
-    private final IProperty parent;
-    private final String name;
+
     private final ISerializer<T> serializer;
-    private final IProperty root;
-    private final PropertyPath path;
-    private final IO io;
+    private final LegibleIO legibleIo;
     private ArrayList<IProperty> children = null;
 
     @SuppressWarnings("unchecked")
@@ -26,39 +23,26 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
      * @param name       Name of single node.
      * @param serializer Converter from / to string.
      */
-    public AnyProperty(IProperty parent, String name, ISerializer<T> serializer) {
-        this.parent = parent;
-        this.name = name;
+    public TypedLegibleProperty(IProperty parent, String name, ISerializer<T> serializer) {
+        super(parent, name);
         this.serializer = serializer;
-        this.root = parent.getRoot();
-        this.path = parent.getPath().plus(name);
-        this.io = new IO(this.getStorage(), this, this.getCriticalSection());
+        this.legibleIo = new LegibleIO(this.getStorage(), this, this.getCriticalSection());
         parent.onChildCreated(this);
     }
 
     @Override
-    public IProperty getParent() {
-        return parent;
-    }
-
-    @Override
-    public IProperty getRoot() {
-        return root;
-    }
-
-    @Override
-    public IStorage getStorage() {
-        return root.getStorage();
+    public ILegibleStorage getStorage() {
+        return getRoot().getStorage();
     }
 
     @Override
     public ICriticalSection getCriticalSection() {
-        return root.getCriticalSection();
+        return getRoot().getCriticalSection();
     }
 
     @Override
-    public boolean isNode() {
-        return false;
+    public Type getType() {
+        return Type.LEGIBLE;
     }
 
     @Override
@@ -80,25 +64,20 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
     }
 
     @Override
-    public IO getIO() {
-        return io;
+    public LegibleIO getLegibleIO() {
+        return legibleIo;
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public PropertyPath getPath() {
-        return path;
+    public BlobIO getBlobIO() {
+        return null;
     }
 
     public T getDefaultValue() {
-        if (io.getDefaultText() == null) {
+        if (legibleIo.getDefaultText() == null) {
             return null;
         }
-        return this.serializer.fromStr(io.getDefaultText());
+        return this.serializer.fromStr(legibleIo.getDefaultText());
     }
 
     /**
@@ -107,10 +86,10 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
      * @return Value of this property or throws exception.
      */
     public T getValue() {
-        if (!io.hasValue()) {
+        if (!legibleIo.hasValue()) {
             return this.getDefaultValue();
         }
-        return this.serializer.fromStr(io.getTextValue());
+        return this.serializer.fromStr(legibleIo.getTextValue());
     }
 
     /**
@@ -119,7 +98,7 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
      * @param what Object which will be set as a property value.
      */
     public S setValue(T what) {
-        io.setTextValue(this.serializer.toStr(what));
+        legibleIo.setTextValue(this.serializer.toStr(what));
         return self();
     }
 
@@ -130,7 +109,7 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
      * @return Stored value or what if there is no stored value.
      */
     public S setDefault(final T what) {
-        io.setDefaultText(serializer.toStr(what));
+        legibleIo.setDefaultText(serializer.toStr(what));
         return self();
     }
 
@@ -139,7 +118,7 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
      */
     @SuppressWarnings("unused")
     public boolean isEnumOnly() {
-        return io.isEnumOnly();
+        return legibleIo.isEnumOnly();
     }
 
     /**
@@ -148,7 +127,7 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
      * @return This object.
      */
     public S setEnumOnly(final boolean isEnumValue) {
-        io.setEnumOnly(isEnumValue);
+        legibleIo.setEnumOnly(isEnumValue);
         return self();
     }
 
@@ -159,7 +138,7 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
      * @return This object.
      */
     public S addEnum(final T what) {
-        io.addEnumText(serializer.toStr(what));
+        legibleIo.addEnumText(serializer.toStr(what));
         return self();
     }
 
@@ -168,8 +147,8 @@ public class AnyProperty<T, S extends AnyProperty<T, S>> implements IProperty {
      */
     @SuppressWarnings("unused")
     public List<T> getEnums() {
-        final List<T> result = new ArrayList<>(io.getEnumTexts().size());
-        for (final String entry : io.getEnumTexts()) {
+        final List<T> result = new ArrayList<>(legibleIo.getEnumTexts().size());
+        for (final String entry : legibleIo.getEnumTexts()) {
             result.add(this.serializer.fromStr(entry));
         }
         return result;

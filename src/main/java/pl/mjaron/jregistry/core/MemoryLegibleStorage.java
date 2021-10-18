@@ -7,7 +7,7 @@ import java.util.TreeMap;
  * Stores all data in RAM only.
  * Usually for test purposes.
  */
-public class MemoryStorage implements IStorage {
+public class MemoryLegibleStorage implements ILegibleStorage {
 
     @Override
     public boolean hasValue(final PropertyPath path) {

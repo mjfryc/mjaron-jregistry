@@ -10,6 +10,10 @@ public class PropertyPath {
     public static final char NODE_SEPARATOR = '.';
     private final String[] pathParts;
 
+    public static PropertyPath emptyPath() {
+        return new PropertyPath("");
+    }
+
     public PropertyPath(String[] path) {
         this.pathParts = path;
         this.validatePath(path);

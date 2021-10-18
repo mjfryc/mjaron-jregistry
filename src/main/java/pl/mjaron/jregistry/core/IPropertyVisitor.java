@@ -32,13 +32,13 @@ public interface IPropertyVisitor {
             JSONObject jProperty = new JSONObject();
             jProperty.put("name", property.getName());
             jProperty.put("path", property.getPath().toString());
-            jProperty.put("isNode", property.isNode());
-            if (property.getIO() != null) {
-                jProperty.put("value", property.getIO().getTextValue());
-                jProperty.put("enums", property.getIO().getEnumTexts());
-                jProperty.put("enumOnly", property.getIO().isEnumOnly());
-                jProperty.put("default", property.getIO().getDefaultText());
-                jProperty.put("hasValue", property.getIO().hasValue());
+            jProperty.put("isNode", property.getType() == IProperty.Type.NODE);
+            if (property.getLegibleIO() != null) {
+                jProperty.put("value", property.getLegibleIO().getTextValue());
+                jProperty.put("enums", property.getLegibleIO().getEnumTexts());
+                jProperty.put("enumOnly", property.getLegibleIO().isEnumOnly());
+                jProperty.put("default", property.getLegibleIO().getDefaultText());
+                jProperty.put("hasValue", property.getLegibleIO().hasValue());
             }
             jArr.add(jProperty);
         }

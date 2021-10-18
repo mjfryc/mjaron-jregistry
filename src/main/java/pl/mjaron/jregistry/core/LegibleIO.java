@@ -3,19 +3,22 @@ package pl.mjaron.jregistry.core;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IO {
+/**
+ * Responsible for storing all properties in text format.
+ */
+public class LegibleIO {
 
-    private final IStorage s;
-    private final IProperty p;
+    private final ILegibleStorage s;
+    private final PropertyPath path;
     ICriticalSection cs;
 
     private String defaultValueText = null;
     private boolean enumOnly = false;
     private List<String> enums = null;
 
-    public IO(final IStorage storage, IProperty property, ICriticalSection section) {
+    public LegibleIO(final ILegibleStorage storage, IProperty property, ICriticalSection section) {
         this.s = storage;
-        this.p = property;
+        this.path = property.getPath();
         this.cs = section;
     }
 
@@ -25,7 +28,7 @@ public class IO {
      * @return True if given property is stored in persistent storage.
      */
     public boolean hasValue() {
-        return cs.withLock(() -> s.hasValue(p.getPath()));
+        return cs.withLock(() -> s.hasValue(path));
     }
 
     /**
@@ -34,7 +37,7 @@ public class IO {
      */
     public void cleanTextValue() {
         cs.withLock(() -> {
-            s.cleanValue(p.getPath());
+            s.cleanValue(path);
             return null;
         });
     }
@@ -46,7 +49,7 @@ public class IO {
      * @return Text value of property.
      */
     public String getTextValue() {
-        return cs.withLock(() -> s.getValue(p.getPath()));
+        return cs.withLock(() -> s.getValue(path));
     }
 
     /**
@@ -60,7 +63,7 @@ public class IO {
             throw new RuntimeException("Bad enum value: [" + textValue + "], available values: " + this.enums);
         }
         cs.withLock(() -> {
-            s.setValue(p.getPath(), textValue);
+            s.setValue(path, textValue);
             return null;
         });
     }
@@ -89,7 +92,6 @@ public class IO {
     /**
      * @param enumOnly If true, only enums will be accepted.
      *                 If false, other values will be also tolerated.
-     * @return This object.
      */
     public void setEnumOnly(final boolean enumOnly) {
         this.enumOnly = enumOnly;
@@ -98,7 +100,7 @@ public class IO {
     /**
      * Inserts enum value as text.
      *
-     * @param enumTextValue
+     * @param enumTextValue Text representation of enumeration.
      */
     public void addEnumText(final String enumTextValue) {
         if (enums == null) {

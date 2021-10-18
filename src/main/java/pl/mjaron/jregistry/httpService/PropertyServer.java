@@ -21,22 +21,31 @@ import java.util.concurrent.Executors;
  * Simple Json reference: https://crunchify.com/how-to-write-json-object-to-file-in-java/
  */
 public class PropertyServer {
-    public static void main(String[] args) throws IOException {
-        PropertyServer srv = new PropertyServer(null, 8080).start();
-    }
 
+    /**
+     * Instance of generic HTTP server implementation.
+     */
     private final HttpServer server;
 
-    public PropertyServer(final IProperty root, final int port) {
+    public PropertyServer(final int port) {
         try {
             final InetSocketAddress address = new InetSocketAddress(port);
             server = HttpServer.create(address, 0);
-            server.createContext("/", new HttpHandler(root));
+            //server.createContext("/", new HttpHandler(root));
             server.setExecutor(Executors.newCachedThreadPool());
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Property server has failed.", e);
         }
+    }
+
+    public PropertyServer addHandler(final String path, final com.sun.net.httpserver.HttpHandler handler) {
+        this.server.createContext(path, handler);
+        return this;
+    }
+
+    public PropertyServer addHandler(final IFeature handler) {
+        return this.addHandler(handler.getHttpPath(), handler);
     }
 
     public PropertyServer start() {
@@ -46,6 +55,7 @@ public class PropertyServer {
     }
 }
 
+@Deprecated
 class HttpHandler implements com.sun.net.httpserver.HttpHandler {
 
     private IProperty root;
@@ -187,7 +197,7 @@ class HttpHandler implements com.sun.net.httpserver.HttpHandler {
             final String path = params.get("path");
             final String value = params.get("value");
             final IProperty property = IProperty.getChildByPath(root, new PropertyPath(path));
-            property.getIO().setTextValue(value);
+            property.getLegibleIO().setTextValue(value);
             System.out.println("About updating value. Path: [" + path + "], value: [" + value + "].");
 
             setResponseHeaders(exchange, HTTP_CONTENT_HTML, HTTP_RESPONSE_OK);

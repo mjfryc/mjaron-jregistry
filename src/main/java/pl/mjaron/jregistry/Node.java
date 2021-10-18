@@ -6,57 +6,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Node implements IProperty {
-
-    private final IProperty parent;
-    private final String name;
-    private final IProperty root;
-    private final PropertyPath path;
-    private final IStorage storage;
+public class Node extends PropertyBase {
+    private final ILegibleStorage storage;
     private final ICriticalSection section;
     private ArrayList<IProperty> children = null;
 
     public Node(IProperty parent, String name) {
-        this.parent = parent;
-        this.name = name;
-        this.root = parent.getRoot();
-        this.path = parent.getPath().plus(name);
-        this.storage = root.getStorage();
-        this.section = root.getCriticalSection();
+        super(parent, name);
+        this.storage = getRoot().getStorage();
+        this.section = getRoot().getCriticalSection();
         parent.onChildCreated(this);
     }
 
-    public Node(IStorage storage, ICriticalSection section) {
-        this.parent = null;
-        this.name = "root";
-        this.path = new PropertyPath("");
+    public Node(ILegibleStorage storage, ICriticalSection section) {
+        super("root", PropertyPath.emptyPath());
         this.storage = storage;
         this.section = section;
-        this.root = this;
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public PropertyPath getPath() {
-        return path;
-    }
-
-    @Override
-    public IProperty getParent() {
-        return parent;
-    }
-
-    @Override
-    public IProperty getRoot() {
-        return root;
-    }
-
-    @Override
-    public IStorage getStorage() {
+    public ILegibleStorage getStorage() {
         return storage;
     }
 
@@ -66,13 +35,13 @@ public class Node implements IProperty {
     }
 
     @Override
-    public boolean isNode() {
-        return true;
+    public Type getType() {
+        return Type.NODE;
     }
 
     @Override
     public String toString() {
-        return this.path.toString() + ".*";
+        return this.getPath().toString() + ".*";
     }
 
     @Override
@@ -94,7 +63,12 @@ public class Node implements IProperty {
     }
 
     @Override
-    public IO getIO() {
+    public LegibleIO getLegibleIO() {
         return null; // This property doesn't use IO because it doesn't have a value.
+    }
+
+    @Override
+    public BlobIO getBlobIO() {
+        return null;
     }
 }

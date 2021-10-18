@@ -1,6 +1,6 @@
 package pl.mjaron.jregistry.core;
 
-public interface IStorage {
+public interface ILegibleStorage {
     /**
      * Tells whether given child has any value set in persistent storage.
      *
@@ -25,7 +25,7 @@ public interface IStorage {
     String getValue(final PropertyPath path);
 
     /**
-     * Allows to change property's value if it is possible.
+     * Allows changing property's value if it is possible.
      *
      * @param what Object which will be set as a property value.
      * @param path Route to the child property.

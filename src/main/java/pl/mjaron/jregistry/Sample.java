@@ -1,7 +1,8 @@
 package pl.mjaron.jregistry;
 
 import pl.mjaron.jregistry.core.IPropertyVisitor;
-import pl.mjaron.jregistry.core.MemoryStorage;
+import pl.mjaron.jregistry.core.MemoryLegibleStorage;
+import pl.mjaron.jregistry.httpService.DataTreeFeature;
 import pl.mjaron.jregistry.httpService.PropertyServer;
 import pl.mjaron.jregistry.core.ReentrantSection;
 
@@ -11,7 +12,7 @@ import java.io.PrintStream;
  * This is sample registry implementation.
  */
 class Registry {
-    Node root = new Node(new MemoryStorage(), new ReentrantSection());
+    Node root = new Node(new MemoryLegibleStorage(), new ReentrantSection());
     public Node fish = new Node(root, "fish");
     public IntProperty FISH_AGE = new IntProperty(fish, "age").setValue(28);
     public StrProperty name = new StrProperty(fish, "what").setDefault("Fish");
@@ -43,11 +44,11 @@ public class Sample {
         });
 
         // Skipping time consuming snippets.
-        if (false) {
+        if (true) {
             Thread thr = new Thread(() -> {
                 String someOperationResult = R.FISH_AGE.getCriticalSection().withLock(() -> {
                     // All operations inside lock will be called atomically.
-                    Thread.sleep(10000);
+                    Thread.sleep(2000);
                     return R.FISH_AGE.getName();
                 });
                 System.out.println("someOperationResult: " + someOperationResult);
@@ -65,6 +66,6 @@ public class Sample {
         o.println();
         o.println("Should I swim? " + R.myBool.getValue());
 
-        PropertyServer srv = new PropertyServer(R.root, 8080).start();
+        //PropertyServer srv = new PropertyServer(8080).addHandler(new DataTreeFeature(R.root)).start();
     }
 }
